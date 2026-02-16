@@ -136,3 +136,14 @@ func UpdateTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Task updated"})
 }
+
+func DeleteTask(c *gin.Context) {
+	id := c.Param("id")
+
+	if err := config.DB.Where("id = ?", id).Delete(&models.Task{}).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete task"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Task deleted"})
+}

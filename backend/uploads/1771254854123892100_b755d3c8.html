@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)https://www.cnblogs.com/hbhszxyb/p/12815765.html -->
+<html lang="zh-cn" style="--olcb-folder-code-block-max-height: 80vh; --cnb-code-bg: rgb(245, 245, 245); --cnb-code-font-size: 12px; --cnb-code-color: rgb(68, 68, 68);"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin-when-cross-origin">
+    <meta name="keywords" content="树上倍增,ST,Tarjan,最近公共祖先,LCA">
+    <meta name="description" content="最近公共祖先( ) 1. 概念 对于有根树 的两个结点 ，最近公共祖先 表示一个结点 ，满足 是`u,v`的 深度最大 的 祖先 节点。 算法分为 离线算法 和 在线算法 离线算法 ( )，是指基于在执行算法前输入数据已知的基本假设，也就是说，对于一个离线算法，在开始时就需要知道问题的所有输入数据，">
+    <meta property="og:description" content="最近公共祖先( ) 1. 概念 对于有根树 的两个结点 ，最近公共祖先 表示一个结点 ，满足 是`u,v`的 深度最大 的 祖先 节点。 算法分为 离线算法 和 在线算法 离线算法 ( )，是指基于在执行算法前输入数据已知的基本假设，也就是说，对于一个离线算法，在开始时就需要知道问题的所有输入数据，">
+    <meta property="og:image" content="https://img2020.cnblogs.com/blog/1824884/202005/1824884-20200502072141696-1598364229.png">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>最近公共祖先 - ♞老姚♘ - 博客园</title>
+    <link rel="icon" id="favicon" href="https://assets.cnblogs.com/favicon_v3_2.ico" type="image/x-icon">
+    <link rel="canonical" href="https://www.cnblogs.com/hbhszxyb/p/12815765.html">
+    
+    <style>#home :not(.cnblogs_code):not(.cnblogs_Highlighter)>pre:not([highlighted]):not([class*="brush:"]) code:not(.hljs), :not(.cnblogs_code):not(.cnblogs_Highlighter)>pre:not([highlighted]):not([class*="brush:"]) code:not(.hljs) {background: rgb(245, 245, 245);
+        padding: 12px;
+        border: 0.533333px solid rgb(204, 204, 204);
+        border-radius: 3px;
+        border-color: transparent;
+        color: rgb(68, 68, 68);
+        font-family: "Courier New", sans-serif;
+        font-size: 12px</style><link rel="stylesheet" href="./最近公共祖先(LCA)_files/blog-common.min.css">
+    
+
+    <link id="MainCss" rel="stylesheet" href="./最近公共祖先(LCA)_files/bundle-darkgreentrip.min.css">
+        <link id="highlighter-theme-cnblogs" type="text/css" rel="stylesheet" href="./最近公共祖先(LCA)_files/cnblogs.css">
+    
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./最近公共祖先(LCA)_files/bundle-darkgreentrip-mobile.min.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/hbhszxyb/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/hbhszxyb/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/hbhszxyb/wlwmanifest.xml">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": "https://www.cnblogs.com/hbhszxyb/p/12815765.html",
+      "headline": "最近公共祖先",
+      "description": "最近公共祖先( ) 1. 概念 对于有根树 的两个结点 ，最近公共祖先 表示一个结点 ，满足 是`u,v`的 深度最大 的 祖先 节点。 算法分为 离线算法 和 在线算法 离线算法 ( )，是指基于在执行算法前输入数据已知的基本假设，也就是说，对于一个离线算法，在开始时就需要知道问题的所有输入数据，",
+      "image": [
+        
+      ],
+      "author": {
+        "@type": "Person",
+        "@id": "https://www.cnblogs.com/hbhszxyb/",
+        "name": "♞老姚♘",
+        "url": "https://www.cnblogs.com/hbhszxyb/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://www.cnblogs.com/",
+        "name": "博客园",
+        "url": "https://www.cnblogs.com/"
+      },
+      "datePublished": "2020-05-02T07:29:00.0000000&#x2B;08:00",
+      "dateModified": "2020-05-02T07:52:00.0000000&#x2B;08:00",
+      "wordCount": "11369",
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://www.cnblogs.com/hbhszxyb/",
+        "name": "hzoi_anby",
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://www.cnblogs.com/",
+          "name": "博客园"
+        }
+      }
+    }
+    </script>
+
+    <script>
+        var currentBlogId = 549441;
+        var currentBlogApp = 'hbhszxyb';
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'darkgreentrip';
+        var visitorUserId = '';
+        window.hasCustomScript = false;
+        window.cb_enable_mathjax = true;
+        window.mathEngine = 0;
+        window.codeHighlightEngine = 1;
+        window.enableCodeLineNumber = false;
+        window.codeHighlightTheme = 'cnblogs';
+        window.darkModeCodeHighlightTheme = 'vs2015';
+        window.isDarkCodeHighlightTheme = false;
+        window.isDarkModeCodeHighlightThemeDark = true;
+        window.isDisableCodeHighlighter = false;
+        window.enableCodeThemeTypeFollowSystem = false;
+        window.enableMacStyleCodeBlock = false;
+
+    </script>
+        <script>
+            window.currentPostId = 12815765;
+            window.currentPostDateAdded = '2020-05-02 07:29';
+        </script>
+    <script src="./最近公共祖先(LCA)_files/jquery-3.3.1.min.js.下载"></script>
+    <script src="./最近公共祖先(LCA)_files/blog-common.min.js.下载"></script><style>.medium-zoom-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 300ms;
+  will-change: opacity;
+}
+
+.medium-zoom--opened .medium-zoom-overlay {
+  cursor: pointer;
+  cursor: zoom-out;
+  opacity: 1;
+}
+
+.medium-zoom-image {
+  cursor: pointer;
+  cursor: zoom-in;
+  /*
+    The `transition` is marked as "!important" for the animation to happen
+    even though it's overriden by another inline `transition` style attribute.
+
+    This is problematic with frameworks that generate inline styles on their
+    images (e.g. Gatsby).
+
+    See https://github.com/francoischalifour/medium-zoom/issues/110
+   */
+  transition: transform 300ms cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+
+.medium-zoom-image--hidden {
+  visibility: hidden;
+}
+
+.medium-zoom-image--opened {
+  position: relative;
+  cursor: pointer;
+  cursor: zoom-out;
+  will-change: transform;
+}
+</style><script id="hljs-script" src="./最近公共祖先(LCA)_files/highlight.min.js.下载" type="text/javascript" async=""></script>
+    
+<script id="mathjax" src="./最近公共祖先(LCA)_files/MathJax.js.下载" type="text/javascript" async=""></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><style type="text/css">.mjx-chtml {display: inline-block; line-height: 0; text-indent: 0; text-align: left; text-transform: none; font-style: normal; font-weight: normal; font-size: 100%; font-size-adjust: none; letter-spacing: normal; word-wrap: normal; word-spacing: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0; min-height: 0; border: 0; margin: 0; padding: 1px 0}
+.MJXc-display {display: block; text-align: center; margin: 1em 0; padding: 0}
+.mjx-chtml[tabindex]:focus, body :focus .mjx-chtml[tabindex] {display: inline-table}
+.mjx-full-width {text-align: center; display: table-cell!important; width: 10000em}
+.mjx-math {display: inline-block; border-collapse: separate; border-spacing: 0}
+.mjx-math * {display: inline-block; -webkit-box-sizing: content-box!important; -moz-box-sizing: content-box!important; box-sizing: content-box!important; text-align: left}
+.mjx-numerator {display: block; text-align: center}
+.mjx-denominator {display: block; text-align: center}
+.MJXc-stacked {height: 0; position: relative}
+.MJXc-stacked > * {position: absolute}
+.MJXc-bevelled > * {display: inline-block}
+.mjx-stack {display: inline-block}
+.mjx-op {display: block}
+.mjx-under {display: table-cell}
+.mjx-over {display: block}
+.mjx-over > * {padding-left: 0px!important; padding-right: 0px!important}
+.mjx-under > * {padding-left: 0px!important; padding-right: 0px!important}
+.mjx-stack > .mjx-sup {display: block}
+.mjx-stack > .mjx-sub {display: block}
+.mjx-prestack > .mjx-presup {display: block}
+.mjx-prestack > .mjx-presub {display: block}
+.mjx-delim-h > .mjx-char {display: inline-block}
+.mjx-surd {vertical-align: top}
+.mjx-mphantom * {visibility: hidden}
+.mjx-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 2px 3px; font-style: normal; font-size: 90%}
+.mjx-annotation-xml {line-height: normal}
+.mjx-menclose > svg {fill: none; stroke: currentColor}
+.mjx-mtr {display: table-row}
+.mjx-mlabeledtr {display: table-row}
+.mjx-mtd {display: table-cell; text-align: center}
+.mjx-label {display: table-row}
+.mjx-box {display: inline-block}
+.mjx-block {display: block}
+.mjx-span {display: inline}
+.mjx-char {display: block; white-space: pre}
+.mjx-itable {display: inline-table; width: auto}
+.mjx-row {display: table-row}
+.mjx-cell {display: table-cell}
+.mjx-table {display: table; width: 100%}
+.mjx-line {display: block; height: 0}
+.mjx-strut {width: 0; padding-top: 1em}
+.mjx-vsize {width: 0}
+.MJXc-space1 {margin-left: .167em}
+.MJXc-space2 {margin-left: .222em}
+.MJXc-space3 {margin-left: .278em}
+.mjx-chartest {display: block; visibility: hidden; position: absolute; top: 0; line-height: normal; font-size: 500%}
+.mjx-chartest .mjx-char {display: inline}
+.mjx-chartest .mjx-box {padding-top: 1000px}
+.MJXc-processing {visibility: hidden; position: fixed; width: 0; height: 0; overflow: hidden}
+.MJXc-processed {display: none}
+.mjx-test {font-style: normal; font-weight: normal; font-size: 100%; font-size-adjust: none; text-indent: 0; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow: hidden; height: 1px}
+.mjx-test.mjx-test-display {display: table!important}
+.mjx-test.mjx-test-inline {display: inline!important; margin-right: -1px}
+.mjx-test.mjx-test-default {display: block!important; clear: both}
+.mjx-ex-box {display: inline-block!important; position: absolute; overflow: hidden; min-height: 0; max-height: none; padding: 0; border: 0; margin: 0; width: 1px; height: 60ex}
+.mjx-test-inline .mjx-left-box {display: inline-block; width: 0; float: left}
+.mjx-test-inline .mjx-right-box {display: inline-block; width: 0; float: right}
+.mjx-test-display .mjx-right-box {display: table-cell!important; width: 10000em!important; min-width: 0; max-width: none; padding: 0; border: 0; margin: 0}
+#MathJax_CHTML_Tooltip {background-color: InfoBackground; color: InfoText; border: 1px solid black; box-shadow: 2px 2px 5px #AAAAAA; -webkit-box-shadow: 2px 2px 5px #AAAAAA; -moz-box-shadow: 2px 2px 5px #AAAAAA; -khtml-box-shadow: 2px 2px 5px #AAAAAA; padding: 3px 4px; z-index: 401; position: absolute; left: 0; top: 0; width: auto; height: auto; display: none}
+.mjx-chtml .mjx-noError {line-height: 1.2; vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+.MJXc-TeX-unknown-R {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: normal; font-weight: normal}
+.MJXc-TeX-unknown-I {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: italic; font-weight: normal}
+.MJXc-TeX-unknown-B {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: normal; font-weight: bold}
+.MJXc-TeX-unknown-BI {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: italic; font-weight: bold}
+.MJXc-TeX-ams-R {font-family: MJXc-TeX-ams-R,MJXc-TeX-ams-Rw}
+.MJXc-TeX-cal-B {font-family: MJXc-TeX-cal-B,MJXc-TeX-cal-Bx,MJXc-TeX-cal-Bw}
+.MJXc-TeX-frak-R {font-family: MJXc-TeX-frak-R,MJXc-TeX-frak-Rw}
+.MJXc-TeX-frak-B {font-family: MJXc-TeX-frak-B,MJXc-TeX-frak-Bx,MJXc-TeX-frak-Bw}
+.MJXc-TeX-math-BI {font-family: MJXc-TeX-math-BI,MJXc-TeX-math-BIx,MJXc-TeX-math-BIw}
+.MJXc-TeX-sans-R {font-family: MJXc-TeX-sans-R,MJXc-TeX-sans-Rw}
+.MJXc-TeX-sans-B {font-family: MJXc-TeX-sans-B,MJXc-TeX-sans-Bx,MJXc-TeX-sans-Bw}
+.MJXc-TeX-sans-I {font-family: MJXc-TeX-sans-I,MJXc-TeX-sans-Ix,MJXc-TeX-sans-Iw}
+.MJXc-TeX-script-R {font-family: MJXc-TeX-script-R,MJXc-TeX-script-Rw}
+.MJXc-TeX-type-R {font-family: MJXc-TeX-type-R,MJXc-TeX-type-Rw}
+.MJXc-TeX-cal-R {font-family: MJXc-TeX-cal-R,MJXc-TeX-cal-Rw}
+.MJXc-TeX-main-B {font-family: MJXc-TeX-main-B,MJXc-TeX-main-Bx,MJXc-TeX-main-Bw}
+.MJXc-TeX-main-I {font-family: MJXc-TeX-main-I,MJXc-TeX-main-Ix,MJXc-TeX-main-Iw}
+.MJXc-TeX-main-R {font-family: MJXc-TeX-main-R,MJXc-TeX-main-Rw}
+.MJXc-TeX-math-I {font-family: MJXc-TeX-math-I,MJXc-TeX-math-Ix,MJXc-TeX-math-Iw}
+.MJXc-TeX-size1-R {font-family: MJXc-TeX-size1-R,MJXc-TeX-size1-Rw}
+.MJXc-TeX-size2-R {font-family: MJXc-TeX-size2-R,MJXc-TeX-size2-Rw}
+.MJXc-TeX-size3-R {font-family: MJXc-TeX-size3-R,MJXc-TeX-size3-Rw}
+.MJXc-TeX-size4-R {font-family: MJXc-TeX-size4-R,MJXc-TeX-size4-Rw}
+.MJXc-TeX-vec-R {font-family: MJXc-TeX-vec-R,MJXc-TeX-vec-Rw}
+.MJXc-TeX-vec-B {font-family: MJXc-TeX-vec-B,MJXc-TeX-vec-Bx,MJXc-TeX-vec-Bw}
+@font-face {font-family: MJXc-TeX-ams-R; src: local('MathJax_AMS'), local('MathJax_AMS-Regular')}
+@font-face {font-family: MJXc-TeX-ams-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_AMS-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_AMS-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_AMS-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-cal-B; src: local('MathJax_Caligraphic Bold'), local('MathJax_Caligraphic-Bold')}
+@font-face {font-family: MJXc-TeX-cal-Bx; src: local('MathJax_Caligraphic'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-cal-Bw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Bold.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Bold.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-frak-R; src: local('MathJax_Fraktur'), local('MathJax_Fraktur-Regular')}
+@font-face {font-family: MJXc-TeX-frak-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-frak-B; src: local('MathJax_Fraktur Bold'), local('MathJax_Fraktur-Bold')}
+@font-face {font-family: MJXc-TeX-frak-Bx; src: local('MathJax_Fraktur'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-frak-Bw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Bold.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Bold.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-math-BI; src: local('MathJax_Math BoldItalic'), local('MathJax_Math-BoldItalic')}
+@font-face {font-family: MJXc-TeX-math-BIx; src: local('MathJax_Math'); font-weight: bold; font-style: italic}
+@font-face {font-family: MJXc-TeX-math-BIw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Math-BoldItalic.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Math-BoldItalic.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Math-BoldItalic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-sans-R; src: local('MathJax_SansSerif'), local('MathJax_SansSerif-Regular')}
+@font-face {font-family: MJXc-TeX-sans-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-sans-B; src: local('MathJax_SansSerif Bold'), local('MathJax_SansSerif-Bold')}
+@font-face {font-family: MJXc-TeX-sans-Bx; src: local('MathJax_SansSerif'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-sans-Bw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Bold.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Bold.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-sans-I; src: local('MathJax_SansSerif Italic'), local('MathJax_SansSerif-Italic')}
+@font-face {font-family: MJXc-TeX-sans-Ix; src: local('MathJax_SansSerif'); font-style: italic}
+@font-face {font-family: MJXc-TeX-sans-Iw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Italic.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Italic.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Italic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-script-R; src: local('MathJax_Script'), local('MathJax_Script-Regular')}
+@font-face {font-family: MJXc-TeX-script-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Script-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Script-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Script-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-type-R; src: local('MathJax_Typewriter'), local('MathJax_Typewriter-Regular')}
+@font-face {font-family: MJXc-TeX-type-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Typewriter-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Typewriter-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Typewriter-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-cal-R; src: local('MathJax_Caligraphic'), local('MathJax_Caligraphic-Regular')}
+@font-face {font-family: MJXc-TeX-cal-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-main-B; src: local('MathJax_Main Bold'), local('MathJax_Main-Bold')}
+@font-face {font-family: MJXc-TeX-main-Bx; src: local('MathJax_Main'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-main-Bw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Main-Bold.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-main-I; src: local('MathJax_Main Italic'), local('MathJax_Main-Italic')}
+@font-face {font-family: MJXc-TeX-main-Ix; src: local('MathJax_Main'); font-style: italic}
+@font-face {font-family: MJXc-TeX-main-Iw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-main-R; src: local('MathJax_Main'), local('MathJax_Main-Regular')}
+@font-face {font-family: MJXc-TeX-main-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-math-I; src: local('MathJax_Math Italic'), local('MathJax_Math-Italic')}
+@font-face {font-family: MJXc-TeX-math-Ix; src: local('MathJax_Math'); font-style: italic}
+@font-face {font-family: MJXc-TeX-math-Iw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size1-R; src: local('MathJax_Size1'), local('MathJax_Size1-Regular')}
+@font-face {font-family: MJXc-TeX-size1-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size2-R; src: local('MathJax_Size2'), local('MathJax_Size2-Regular')}
+@font-face {font-family: MJXc-TeX-size2-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size3-R; src: local('MathJax_Size3'), local('MathJax_Size3-Regular')}
+@font-face {font-family: MJXc-TeX-size3-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size4-R; src: local('MathJax_Size4'), local('MathJax_Size4-Regular')}
+@font-face {font-family: MJXc-TeX-size4-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-vec-R; src: local('MathJax_Vector'), local('MathJax_Vector-Regular')}
+@font-face {font-family: MJXc-TeX-vec-Rw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Vector-Regular.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Vector-Regular.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Vector-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-vec-B; src: local('MathJax_Vector Bold'), local('MathJax_Vector-Bold')}
+@font-face {font-family: MJXc-TeX-vec-Bx; src: local('MathJax_Vector'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-vec-Bw; src /*1*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/eot/MathJax_Vector-Bold.eot'); src /*2*/: url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/woff/MathJax_Vector-Bold.woff') format('woff'), url('https://mathjax.cnblogs.com/2_7_5/fonts/HTML-CSS/TeX/otf/MathJax_Vector-Bold.otf') format('opentype')}
+</style></head>
+<body class="skin-darkgreentrip has-navbar mathjax2 has-bannerbar hljs-engine"><div id="MathJax_Message" style="display: none;"></div>
+    <a name="top"></a>
+            <a href="https://www.ebcloud.com/chn_xhpwpopm" onclick="countCreativeClicks(&#39;C0-英博云&#39;)" target="_blank" rel="nofollow">
+                
+            </a>
+        <div id="imagebar" class="imagebar-mobile imagebar-text-mobile formobile">
+                <a href="https://www.doubao.com/?channel=cnblogs&amp;source=hw_db_cnblogs&amp;type=lunt&amp;theme=bianc" onclick="countCreativeClicks(&#39;M2-字节-豆包&#39;)" rel="nofollow">
+                    <img src="./最近公共祖先(LCA)_files/35695-20250620221146444-645204917.webp" alt="" onload="countCreativeImpressionsOnMobile(&#39;M2-字节-豆包&#39;)">
+                    <span id="m2_impression" style="display:none"></span>
+                </a>
+        </div>
+    <div id="top_nav" class="navbar forpc">
+        
+    </div>
+
+    
+
+    <div id="home">
+<div id="header">
+	
+	
+</div>
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                <a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/hbhszxyb/p/12815765.html" title="发布于 2020-05-02 07:29">
+    <span role="heading" aria-level="2">最近公共祖先</span>
+    
+
+</a><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                <div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+<h3 id="最近公共祖先lca">最近公共祖先(<code>LCA</code>)<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h3>
+<h4 id="1-概念">1. 概念<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>对于有根树<code>T</code>的两个结点<code>u,v</code>，最近公共祖先<code>LCA(T,u,v)</code>表示一个结点<code>x</code>，满足<code>x</code>是<code>u,v</code>的<strong>深度最大</strong>的<strong>祖先</strong>节点。</li>
+<li><code>LCA</code>算法分为<strong>离线算法</strong>和<strong>在线算法</strong>
+<ul>
+<li><strong>离线算法</strong>( <code>off line algorithms</code>)，是指基于在执行算法前输入数据已知的基本假设，也就是说，对于一个离线算法，在开始时就需要知道问题的所有输入数据，而且在解决一个问题后就要立即输出结果。</li>
+<li><strong>在线算法</strong>是指它可以以序列化的方式一个个的处理输入，也就是说在开始时并不需要已经知道所有的输入。</li>
+</ul>
+</li>
+<li><code>LCA</code>的离线算法主要指的是基于深度优先搜索的<code>tarjan</code>算法</li>
+</ul>
+<h4 id="2-tarjan求lca">2. <code>tarjan</code>求<code>LCA</code><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>
+<p>实现步骤：</p>
+<ol>
+<li>任选一个点<code>u</code>为根节点，从根节点开始<code>DFS</code>。</li>
+<li>遍历<code>u</code>所有子节点<code>v</code>，并标记这些子节点<code>v</code>已被访问过。</li>
+<li>若是<code>v</code>还有子节点，返回2，否则下一步。</li>
+<li>并查集，把<code>v</code>合并到<code>u</code>上。</li>
+<li>寻找与当前点<code>u</code>有关的询问关系的点<code>v</code>。</li>
+<li>若是<code>v</code>已经被访问过了，则可以确认<code>u</code>和<code>v</code>的最近公共祖先为<code>v</code>所在集合的根节点。</li>
+</ol>
+</li>
+<li>
+<p>设<code>f[]</code>数组为并查集的父亲节点数组，初始化<code>f[i]=i</code>，<code>vis[]</code>数组为是否访问过的数组，初始为<code>0</code>;</p>
+<p>询问为：<code>LCA(9,8),LCA(4,6),LCA(7,5),LCA(5,3)</code></p>
+</li>
+<li>
+<p>图示：</p>
+<ol>
+<li>
+<p>初始状态：</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072141696-1598364229.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p>以<code>1</code>为根节点<code>DFS</code>，直到节点<code>4</code>访问结束，和<code>4</code>相关的查询有节点<code>6</code>，但<code>6</code>还未访问，说明<code>LCA(4,6)</code>还不确定，把节点<code>4</code>合并到其父节点为根的子树上，即：<code>f[4]=2</code>。</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072236939-320645786.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p>继续<code>DFS</code>直到搜到节点<code>9</code>结束，和<code>9</code>相关的查询有节点<code>8</code>，但<code>8</code>还未访问，合并<code>9</code>,即：<code>f[9]=7</code>。</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072255823-1396413149.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p><code>9</code>结束后回溯到节点<code>7</code>，节点<code>7</code>结束，和<code>7</code>相关的查询有<code>5</code>，此时<code>5</code>虽然没有变黑，但可以肯定<code>5</code>是<code>7</code>的祖先，实际上可以求出<code>LCA(5,7)=5</code>，也可以等<code>5</code>变黑再求均可。</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072312206-25055818.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p>继续搜<code>8</code>，发现<code>8</code>没有子节点，则寻找与其有关系查询为<code>9</code>，此时<code>9</code>已黑，则他们的最近公共祖先为<code>find(9)=5</code>；在<code>find(9)</code>过程中会把9路径压缩，直接挂到<code>5</code>上，此时因为节点<code>5</code>未变黑，所以<code>f[5]=5</code>，注意父子关系必须变黑后建立</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072332907-983995306.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p>返回<code>5</code>后，变黑，此时跟<code>5</code>相关的查询点有<code>3</code>和<code>7</code>，<code>3</code>未访问，<code>7</code>已变黑，此时也可以求出<code>LCA(5,7)=find(7)=5</code>。</p>
+</li>
+<li>
+<p>回溯到<code>2</code>没有相关查询，一次遍历到节点<code>6</code>，与节点<code>6</code>相关的查询时节点<code>4</code>，且<code>4</code>已黑，在求出<code>LCA(4,6)=1</code>。</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072418452-1736112073.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p>回溯到<code>3</code>,<code>3</code>变黑，和<code>3</code>相关的查询点有<code>5</code>，<code>5</code>已黑，<code>5</code>的祖先节点<code>1</code>即为公共祖先即<code>LCA(3,5)=find(5)=1</code>。</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072436406-365774150.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+</ol>
+</li>
+<li>
+<p>例题：点的距离</p>
+<blockquote>
+<h4 id="description">Description<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>给定一个<code>n</code>个点的树，<code>Q</code>个询问，每次询问<code>x</code>到<code>y</code>点的距离。</li>
+</ul>
+<h4 id="input">Input<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>第一行为一个整数<code>n(n&lt;=1e4)</code>，表示<code>n</code>个节点。</li>
+<li>接下来<code>n-1</code>行，每行两个整数<code>x,y</code>表示<code>x</code>到<code>y</code>有一条边，所有边权为<code>1</code>。</li>
+</ul>
+<h4 id="output">Output<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>输出<code>Q</code>行，表示询问。</li>
+</ul>
+<h4 id="sample-input">Sample Input<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-plain highlighter-hljs hljs">6
+1 2
+1 3
+2 4
+2 5
+3 6
+2
+2 6
+5 6
+</code></pre>
+<h4 id="sample-output">Sample Output<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-plain highlighter-hljs hljs">3
+4
+</code></pre>
+<ul>
+<li>
+<p><code>code</code></p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> maxn=<span class="hljs-number">1e4</span>+<span class="hljs-number">5</span>,maxq=<span class="hljs-number">1e5</span>+<span class="hljs-number">5</span>;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Edge</span>{</span><span class="hljs-type">int</span> to,id,next;}e[<span class="hljs-number">2</span>*(maxn+maxq)];<span class="hljs-comment">//询问和树存储在同一个数组</span>
+<span class="hljs-type">int</span> head[<span class="hljs-number">2</span>*maxn],len,n;<span class="hljs-comment">//1~n存树，n+1~2*n存询问</span>
+<span class="hljs-type">int</span> dis[maxn],vis[maxn],f[maxn],ans[maxq];<span class="hljs-comment">//ans[i]存储第i个答案</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">Insert</span><span class="hljs-params">(<span class="hljs-type">int</span> x,<span class="hljs-type">int</span> y,<span class="hljs-type">int</span> z)</span>{<span class="hljs-comment">//id记录是第几个询问</span>
+	e[++len].to=y;e[len].id=z;e[len].next=head[x];head[x]=len;
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">Find</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span>{
+	<span class="hljs-keyword">return</span> x==f[x] ? x : f[x]=Find(f[x]);
+}
+<span class="hljs-type">void</span> <span class="hljs-title function_">Tarjan</span><span class="hljs-params">(<span class="hljs-type">int</span> u)</span>{
+	vis[u]=<span class="hljs-number">1</span>;f[u]=u;<span class="hljs-comment">//初始化并查集</span>
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=head[u];i;i=e[i].next){
+		<span class="hljs-type">int</span> v=e[i].to;
+		<span class="hljs-keyword">if</span>(vis[v])<span class="hljs-keyword">continue</span>;
+		dis[v]=dis[u]+<span class="hljs-number">1</span>;<span class="hljs-comment">//dis[u]表示u到根节点点的距离</span>
+		Tarjan(v);
+		f[v]=u;<span class="hljs-comment">//v变黑之后再跟上线建立联系，保证v的子孙节点</span>
+	}<span class="hljs-comment">//在v访问结束之前最远也只能查找到v</span>
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=head[n+u];i;i=e[i].next){<span class="hljs-comment">//u变黑，查找u相关的询问</span>
+		<span class="hljs-type">int</span> v=e[i].to-n,id=e[i].id;
+		<span class="hljs-keyword">if</span>(vis[v])<span class="hljs-comment">//如果v已访问，此时v不一定变黑，有可能为灰此时LCA(u,v)=Find(v)</span>
+			ans[id]=dis[u]+dis[v]<span class="hljs-number">-2</span>*dis[Find(v)];
+	}
+}
+<span class="hljs-type">void</span> <span class="hljs-title function_">Solve</span><span class="hljs-params">()</span>{
+	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;n);
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;n;++i){
+		<span class="hljs-type">int</span> u,v;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;u,&amp;v);
+		Insert(u,v,<span class="hljs-number">1</span>);Insert(v,u,<span class="hljs-number">1</span>);
+	}
+	<span class="hljs-type">int</span> Q;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;Q);
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=Q;++i){
+		<span class="hljs-type">int</span> u,v;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;u,&amp;v);
+		Insert(u+n,v+n,i);Insert(n+v,n+u,i);
+	}<span class="hljs-comment">//询问存储到n+1~2*n</span>
+	Tarjan(<span class="hljs-number">1</span>);
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=Q;++i)
+		<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,ans[i]);
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>{
+	Solve();
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p><code>Tarjan</code> 算法需要初始化并查集，所以预处理的时间复杂度为<code>O(n)</code> ，<code>Tarjan</code> 算法处理所有询问的时间复杂度为 <code>O(n+q)</code>。但是 <code>Tarjan</code> 算法的常数比倍增算法大。</p>
+</li>
+</ul>
+<h4 id="3-树上倍增求lca">3. 树上倍增求<code>LCA</code><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>
+<p>实现步骤：求<code>LCA(u,v)</code></p>
+<ol>
+<li><code>DFS</code>求出每个节点相对于根节点的深度<code>d[i]</code>。</li>
+<li>如果<code>d[u]&lt;d[v]</code>，交换节点<code>u</code>和<code>v</code>，如果<code>u</code>和<code>v</code>的深度不一样，找到<code>u</code>的和<code>v</code>在同一深度的祖先节点<code>u'</code>，显然<code>LCA(u,v)==LCA(u',v)</code>。</li>
+<li>如果<code>u'==v</code>，即<code>v</code>正好是<code>u</code>的祖先，则<code>LCA(u,v)=v</code>,结束，否则进行如下操作：
+<ul>
+<li>两个点同时向根节点跳 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-1-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;mtext&gt;&amp;#xA0;&lt;/mtext&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;l&lt;/mi&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;g&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-1" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-2" class="mjx-mrow"><span id="MJXc-Node-3" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-4" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-5" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span><span id="MJXc-Node-6" class="mjx-mtext"><span class="mjx-char MJXc-TeX-main-R" style="margin-top: -0.262em; padding-bottom: 0.32em;">&nbsp;</span></span><span id="MJXc-Node-7" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">(</span></span><span id="MJXc-Node-8" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-9" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.056em; padding-bottom: 0.32em;">=</span></span><span id="MJXc-Node-10" class="mjx-mi MJXc-space3"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.267em;">l</span></span><span id="MJXc-Node-11" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.214em; padding-bottom: 0.267em;">o</span></span><span id="MJXc-Node-12" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.214em; padding-bottom: 0.479em; padding-right: 0.003em;">g</span></span><span id="MJXc-Node-13" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">(</span></span><span id="MJXc-Node-14" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.214em; padding-bottom: 0.267em;">n</span></span><span id="MJXc-Node-15" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">)</span></span><span id="MJXc-Node-16" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">)</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup><mtext>&nbsp;</mtext><mo stretchy="false">(</mo><mi>j</mi><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></math></span></span><script type="math/tex" id="MathJax-Element-1">2^j\ (j=log(n))</script></span> 步，此时有两种可能:
+<ol>
+<li><code>u</code>和<code>v</code>同时跳 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-2-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-17" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-18" class="mjx-mrow"><span id="MJXc-Node-19" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-20" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-21" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-2">2^j</script></span> 步指向同一点，说明他们的 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-3-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-22" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-23" class="mjx-mrow"><span id="MJXc-Node-24" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-25" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-26" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-3">2^j</script></span> 祖先是同一个点，但不一定是最近的公共祖先，有可能跳多了，我们就调小一般的上跳幅度，即跳<span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-4-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-27" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-28" class="mjx-mrow"><span id="MJXc-Node-29" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-30" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-31" class="mjx-texatom" style=""><span id="MJXc-Node-32" class="mjx-mrow"><span id="MJXc-Node-33" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-34" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-35" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mrow class="MJX-TeXAtom-ORD"><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msup></math></span></span><script type="math/tex" id="MathJax-Element-4">2^{j-1}</script></span>步。</li>
+<li>指向不同的点，此时<code>u,v</code>，我们<code>u</code>和<code>v</code>分别为他们的 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-5-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-36" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-37" class="mjx-mrow"><span id="MJXc-Node-38" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-39" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-40" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-5">2^j</script></span> 祖先。然后减小上跳幅度为原来一半即<code>j--</code>，重复<code>1., 2.</code>，直到<code>j==0</code>，此时两个点必然都在<code>LCA</code>下面那层，所以再跳1步即可。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>上面的思想实际上是利用了倍增的思想：</p>
+<ul>
+<li>
+<p>定义：<span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-6-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-41" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-42" class="mjx-mrow"><span id="MJXc-Node-43" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-44" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-45" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-46" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-47" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-48" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-49" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo></math></span></span><script type="math/tex" id="MathJax-Element-6">f[i][j]</script></span> 表示节点<code>i</code>往上跳 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-7-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-50" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-51" class="mjx-mrow"><span id="MJXc-Node-52" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-53" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-54" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-7">2^j</script></span> 步后的节点，即<code>i</code>的 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-8-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-55" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-56" class="mjx-mrow"><span id="MJXc-Node-57" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-58" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-59" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-8">2^j</script></span> 祖先 ,显然：</p>
+<ul>
+<li><span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-9-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-60" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-61" class="mjx-mrow"><span id="MJXc-Node-62" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-63" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-64" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-65" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-66" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-67" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-68" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-69" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.056em; padding-bottom: 0.32em;">=</span></span><span id="MJXc-Node-70" class="mjx-mi MJXc-space3"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-71" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-72" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-73" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-74" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-75" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-76" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-77" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-78" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-79" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span><span id="MJXc-Node-80" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-81" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-82" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-83" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-84" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-85" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span><span id="MJXc-Node-86" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo>=</mo><mi>f</mi><mo stretchy="false">[</mo><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></math></span></span><script type="math/tex" id="MathJax-Element-9">f[i][j]=f[ f[i][j-1] ][j-1]</script></span></li>
+<li><span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-10-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mn&gt;0&lt;/mn&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-87" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-88" class="mjx-mrow"><span id="MJXc-Node-89" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-90" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-91" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-92" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-93" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-94" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.373em;">0</span></span><span id="MJXc-Node-95" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mn>0</mn><mo stretchy="false">]</mo></math></span></span><script type="math/tex" id="MathJax-Element-10">f[i][0]</script></span>为<code>i</code>的父亲节点</li>
+</ul>
+</li>
+<li>
+<p>从根节点进行一遍<code>DFS</code>，可以很快预处理出每个节点的 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-11-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-96" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-97" class="mjx-mrow"><span id="MJXc-Node-98" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-99" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-100" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-11">2^j</script></span> 祖先和深度。</p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-type">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span> u,<span class="hljs-type">int</span> fa)</span>{<span class="hljs-comment">//对应深搜预处理f数组 </span>
+    dep[u]=dep[fa]+<span class="hljs-number">1</span>;<span class="hljs-comment">//预处理节点深度 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;(<span class="hljs-number">1</span>&lt;&lt;i)&lt;=dep[u];i++)
+        f[u][i]=f[f[u][i<span class="hljs-number">-1</span>]][i<span class="hljs-number">-1</span>];<span class="hljs-comment">//根据u的深度，预处理其2^i祖先 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=head[u];i;i=e[i].next){
+        <span class="hljs-type">int</span> v=e[i].to;
+        <span class="hljs-keyword">if</span>(v==fa)<span class="hljs-keyword">continue</span>;
+        f[v][<span class="hljs-number">0</span>]=u;<span class="hljs-comment">//v的父亲节点是u </span>
+        dfs(v,u);
+    }
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>当<code>u</code>, <code>v</code>不在同一个深度时，我们要用倍增思想把深度大的节点<code>u</code>调到和<code>v</code>在同一个深度。</p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-type">int</span> len=dep[u]-dep[v],k=<span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span>(len){<span class="hljs-comment">//对k进行二进制分解</span>
+    <span class="hljs-keyword">if</span>(len &amp; <span class="hljs-number">1</span>) u=f[u][k];
+    ++k;len&gt;&gt;=<span class="hljs-number">1</span>;
+}
+</code></pre>
+</li>
+<li>
+<p><code>code</code></p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> maxn=<span class="hljs-number">1e4</span>+<span class="hljs-number">5</span>,maxe=<span class="hljs-number">1e5</span>+<span class="hljs-number">5</span>;
+<span class="hljs-type">int</span> n,len,head[maxn],dep[maxn],f[maxn][<span class="hljs-number">21</span>];
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">edge</span>{</span><span class="hljs-type">int</span> next,to;}e[<span class="hljs-number">2</span>*maxe];
+<span class="hljs-type">void</span> <span class="hljs-title function_">Insert</span><span class="hljs-params">(<span class="hljs-type">int</span> u,<span class="hljs-type">int</span> v)</span>{
+	e[++len].to=v;e[len].next=head[u];head[u]=len;    
+}
+<span class="hljs-type">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span> u,<span class="hljs-type">int</span> fa)</span>{<span class="hljs-comment">//对应深搜预处理f数组 </span>
+    dep[u]=dep[fa]+<span class="hljs-number">1</span>;<span class="hljs-comment">//预处理节点深度 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;(<span class="hljs-number">1</span>&lt;&lt;i)&lt;=dep[u];i++)
+        f[u][i]=f[f[u][i<span class="hljs-number">-1</span>]][i<span class="hljs-number">-1</span>];<span class="hljs-comment">//根据u的深度，预处理其2^i祖先 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=head[u];i;i=e[i].next){
+        <span class="hljs-type">int</span> v=e[i].to;
+        <span class="hljs-keyword">if</span>(v==fa)<span class="hljs-keyword">continue</span>;
+        f[v][<span class="hljs-number">0</span>]=u;<span class="hljs-comment">//v的父亲节点是u </span>
+        dfs(v,u);
+    }
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">lca</span><span class="hljs-params">(<span class="hljs-type">int</span> u,<span class="hljs-type">int</span> v)</span>{
+    <span class="hljs-keyword">if</span>(dep[u]&lt;dep[v])<span class="hljs-built_in">std</span>::swap(u,v);
+    <span class="hljs-type">int</span> len=dep[u]-dep[v],k=<span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span>(len){
+    	<span class="hljs-keyword">if</span>(len &amp; <span class="hljs-number">1</span>) u=f[u][k];
+    	++k;len&gt;&gt;=<span class="hljs-number">1</span>;
+	}
+	<span class="hljs-keyword">if</span>(u==v)<span class="hljs-keyword">return</span> u;
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">20</span>;i&gt;=<span class="hljs-number">0</span>;i--){<span class="hljs-comment">//从大到小枚举     </span>
+        <span class="hljs-keyword">if</span>(f[u][i]!=f[v][i]){<span class="hljs-comment">//尽可能接近         </span>
+            u=f[u][i];v=f[v][i];
+        } 
+    } 
+    <span class="hljs-keyword">return</span> f[u][<span class="hljs-number">0</span>];<span class="hljs-comment">//u,v在LCA的下一层 </span>
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>{
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;n);
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;n;i++){
+        <span class="hljs-type">int</span> x,y;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;x,&amp;y);
+        Insert(x,y);Insert(y,x);
+    }
+    dfs(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>);
+    <span class="hljs-type">int</span> Q;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;Q);
+    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=Q;i++){
+        <span class="hljs-type">int</span> u,v;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;u,&amp;v);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,dep[u]+dep[v]<span class="hljs-number">-2</span>*dep[lca(u,v)]);<span class="hljs-comment">//求两个节点的LCA </span>
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>时间复杂度：倍增算法的预处理时间复杂度为:<code>O(n*log(n))</code> ，单次查询时间复杂度为 :<code>O(log(n))</code>。</p>
+</li>
+</ul>
+<h4 id="4-rmq之st算法">4. <code>RMQ</code>之<code>ST</code>算法<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>
+<p><code>RMQ(Range Minimum/Maximum Query)</code>，即<strong>区间最值查询</strong>，是指这样一个问题：</p>
+<ul>
+<li>对于长度为<code>n</code>的数列<code>A</code>，回答若干询问<code>RMQ(A,i,j)(i,j&lt;=n)</code>，返回数列<code>A</code>中下标在<code>i,j</code>之间的最小/大值。</li>
+<li>如果只有一次询问，那样只有一遍<code>for</code>就可以搞定，但是如果有许多次询问就无法在很快的时间处理出来。在这里介绍一个在线算法，<code>ST</code>算法。</li>
+</ul>
+</li>
+<li>
+<p><code>ST(Sparse Table)</code>算法是一个非常有名的在线处理<code>RMQ</code>问题的算法，它可以在<code>O(nlogn)</code>时间内进行预处理，然后在<code>O(1)</code>时间内回答每个查询。</p>
+</li>
+<li>
+<p><code>ST</code>算法主要有预处理和查询两种操作：</p>
+<ol>
+<li>
+<p><strong>预处理</strong></p>
+<ul>
+<li>
+<p><span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-12-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-101" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-102" class="mjx-mrow"><span id="MJXc-Node-103" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-104" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-105" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-106" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-107" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-108" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-109" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo></math></span></span><script type="math/tex" id="MathJax-Element-12">f[i][j]</script></span> 表示从<code>i</code>开始的长度为 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-13-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-110" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-111" class="mjx-mrow"><span id="MJXc-Node-112" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-113" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-114" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>j</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-13">2^j</script></span> 的一段元素的<strong>最小值</strong>,则有：</p>
+<ul>
+<li>
+<p><span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-14-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msup&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;[&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo stretchy=&quot;false&quot;&gt;]&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mtext&gt;&amp;#xA0;&lt;/mtext&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/msup&gt;&lt;mo&gt;&amp;#x2264;&lt;/mo&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-115" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-116" class="mjx-mrow"><span id="MJXc-Node-117" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-118" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-119" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-120" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-121" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-122" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-123" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-124" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.056em; padding-bottom: 0.32em;">=</span></span><span id="MJXc-Node-125" class="mjx-mi MJXc-space3"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.214em; padding-bottom: 0.267em;">m</span></span><span id="MJXc-Node-126" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-127" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.214em; padding-bottom: 0.267em;">n</span></span><span id="MJXc-Node-128" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">(</span></span><span id="MJXc-Node-129" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-130" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-131" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-132" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-133" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-134" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-135" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-136" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span><span id="MJXc-Node-137" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-138" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="margin-top: -0.156em; padding-bottom: 0.532em;">,</span></span><span id="MJXc-Node-139" class="mjx-mi MJXc-space1"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.479em; padding-right: 0.06em;">f</span></span><span id="MJXc-Node-140" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-141" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.267em;">i</span></span><span id="MJXc-Node-142" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">+</span></span><span id="MJXc-Node-143" class="mjx-msubsup MJXc-space2"><span class="mjx-base"><span id="MJXc-Node-144" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-145" class="mjx-texatom" style=""><span id="MJXc-Node-146" class="mjx-mrow"><span id="MJXc-Node-147" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-148" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-149" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span></span></span></span></span><span id="MJXc-Node-150" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-151" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">[</span></span><span id="MJXc-Node-152" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span><span id="MJXc-Node-153" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-154" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span><span id="MJXc-Node-155" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">]</span></span><span id="MJXc-Node-156" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">)</span></span><span id="MJXc-Node-157" class="mjx-mtext"><span class="mjx-char MJXc-TeX-main-R" style="margin-top: -0.262em; padding-bottom: 0.32em;">&nbsp;</span></span><span id="MJXc-Node-158" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">(</span></span><span id="MJXc-Node-159" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-160" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-161" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.426em; padding-bottom: 0.479em;">j</span></span></span></span><span id="MJXc-Node-162" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.479em;">≤</span></span><span id="MJXc-Node-163" class="mjx-mi MJXc-space3"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.214em; padding-bottom: 0.267em;">n</span></span><span id="MJXc-Node-164" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.479em; padding-bottom: 0.585em;">)</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo>=</mo><mi>m</mi><mi>i</mi><mi>n</mi><mo stretchy="false">(</mo><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo><mo>,</mo><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo>+</mo><msup><mn>2</mn><mrow class="MJX-TeXAtom-ORD"><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo><mo stretchy="false">)</mo><mtext>&nbsp;</mtext><mo stretchy="false">(</mo><msup><mn>2</mn><mi>j</mi></msup><mo>≤</mo><mi>n</mi><mo stretchy="false">)</mo></math></span></span><script type="math/tex" id="MathJax-Element-14">f[i][j]=min(f[i][j-1],f[i+2^{j-1}][j-1])\ (2^j\le n)</script></span></p>
+</li>
+<li>
+<p>原理如图所示:</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072643200-130615882.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p><code>code</code></p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-type">void</span> <span class="hljs-title function_">Init</span><span class="hljs-params">()</span>{<span class="hljs-comment">//ST表初始化</span>
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=n;++i)
+		f[i][<span class="hljs-number">0</span>]=a[i];
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">1</span>;(<span class="hljs-number">1</span>&lt;&lt;j)&lt;=n;++j)<span class="hljs-comment">//枚举区间宽度为2^j </span>
+		<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i+(<span class="hljs-number">1</span>&lt;&lt;j)<span class="hljs-number">-1</span>&lt;=n;++i)<span class="hljs-comment">//枚举区间起点，保证区间终点i+(1&lt;&lt;j)-1&lt;=n </span>
+			f[i][j]=<span class="hljs-built_in">std</span>::max(f[i][j<span class="hljs-number">-1</span>],f[i+(<span class="hljs-number">1</span>&lt;&lt;(j<span class="hljs-number">-1</span>))][j<span class="hljs-number">-1</span>]);
+} 
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>查询</strong></p>
+<ul>
+<li>
+<p>查询操作很简单,令<code>k</code>为满足 <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-15-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/msup&gt;&lt;mo&gt;&amp;#x2264;&lt;/mo&gt;&lt;mi&gt;R&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-165" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-166" class="mjx-mrow"><span id="MJXc-Node-167" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-168" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-169" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.267em;">k</span></span></span></span><span id="MJXc-Node-170" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.479em;">≤</span></span><span id="MJXc-Node-171" class="mjx-mi MJXc-space3"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.32em;">R</span></span><span id="MJXc-Node-172" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">−</span></span><span id="MJXc-Node-173" class="mjx-mi MJXc-space2"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.267em;">L</span></span><span id="MJXc-Node-174" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.32em; padding-bottom: 0.426em;">+</span></span><span id="MJXc-Node-175" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">1</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>k</mi></msup><mo>≤</mo><mi>R</mi><mo>−</mo><mi>L</mi><mo>+</mo><mn>1</mn></math></span></span><script type="math/tex" id="MathJax-Element-15">2^k\le R-L+1</script></span> 的最大整数,则以<code>L</code>为开头,以<code>R</code>为结尾的两个长度为  <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"></span><span id="MathJax-Element-16-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 135%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-176" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-177" class="mjx-mrow"><span id="MJXc-Node-178" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-179" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.373em; padding-bottom: 0.32em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-180" class="mjx-mi" style=""><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.479em; padding-bottom: 0.267em;">k</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>2</mn><mi>k</mi></msup></math></span></span><script type="math/tex" id="MathJax-Element-16">2^k</script></span> 的区间合起来即覆盖了区间<code>[L,R]</code>.由于是取最值,有些元素重复考虑了几遍也没关系。</p>
+</li>
+<li>
+<p>原理如图所示：</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072708715-1460139185.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+</li>
+<li>
+<p><code>code</code></p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-type">int</span> <span class="hljs-title function_">Ask</span><span class="hljs-params">(<span class="hljs-type">int</span> s,<span class="hljs-type">int</span> t)</span>{<span class="hljs-comment">//查询区间[s,t]最大值</span>
+	<span class="hljs-type">int</span> k=<span class="hljs-built_in">log</span>(t-s+<span class="hljs-number">1</span>)/<span class="hljs-built_in">log</span>(<span class="hljs-number">2</span>);<span class="hljs-comment">//保证k满足 2^k&lt;r+l-1&lt;=2^(k+1)</span>
+	<span class="hljs-keyword">return</span> <span class="hljs-built_in">std</span>::max(f[s][k],f[t-(<span class="hljs-number">1</span>&lt;&lt;k)+<span class="hljs-number">1</span>][k]);
+}
+</code></pre>
+</li>
+<li>
+<p>完整代码：</p>
+</li>
+</ul>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> maxn=<span class="hljs-number">1e4</span>+<span class="hljs-number">5</span>;
+<span class="hljs-type">int</span> n,a[maxn],f[maxn][<span class="hljs-number">21</span>];
+<span class="hljs-type">void</span> <span class="hljs-title function_">Init</span><span class="hljs-params">()</span>{
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=n;++i)
+		f[i][<span class="hljs-number">0</span>]=a[i];
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">1</span>;(<span class="hljs-number">1</span>&lt;&lt;j)&lt;=n;++j)<span class="hljs-comment">//枚举区间宽度为2^j </span>
+		<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i+(<span class="hljs-number">1</span>&lt;&lt;j)<span class="hljs-number">-1</span>&lt;=n;++i)<span class="hljs-comment">//枚举区间起点，保证区间终点i+(1&lt;&lt;j)-1&lt;=n </span>
+			f[i][j]=<span class="hljs-built_in">std</span>::max(f[i][j<span class="hljs-number">-1</span>],f[i+(<span class="hljs-number">1</span>&lt;&lt;(j<span class="hljs-number">-1</span>))][j<span class="hljs-number">-1</span>]);
+} 
+<span class="hljs-type">int</span> <span class="hljs-title function_">Ask</span><span class="hljs-params">(<span class="hljs-type">int</span> s,<span class="hljs-type">int</span> t)</span>{
+	<span class="hljs-type">int</span> k=<span class="hljs-built_in">log</span>(t-s+<span class="hljs-number">1</span>)/<span class="hljs-built_in">log</span>(<span class="hljs-number">2</span>);<span class="hljs-comment">//保证k满足 2^k&lt;r+l-1&lt;=2^(k+1)</span>
+	<span class="hljs-keyword">return</span> <span class="hljs-built_in">std</span>::max(f[s][k],f[t-(<span class="hljs-number">1</span>&lt;&lt;k)+<span class="hljs-number">1</span>][k]);
+}
+<span class="hljs-type">void</span> <span class="hljs-title function_">Solve</span><span class="hljs-params">()</span>{
+	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;n);<span class="hljs-comment">//n个点的序列</span>
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=n;++i)
+		<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;a[i]);
+	Init();<span class="hljs-comment">//st表的初始化</span>
+	<span class="hljs-type">int</span> Q;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;Q);
+	<span class="hljs-keyword">while</span>(Q--){<span class="hljs-comment">//q个询问</span>
+		<span class="hljs-type">int</span> x,y;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;x,&amp;y);
+		<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,Ask(x,y));
+	}
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>{
+	Solve();
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="5-lca在线做法">5. <code>LCA</code>在线做法<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h4>
+<ul>
+<li>
+<p>算法思想：</p>
+<ul>
+<li>从根节点<code>DFS</code>，无论是递归还是回溯，每次到达一个节点就把编号记录下来，得到一个长度为 <code>2N−1</code> 的序列，成为树的欧拉序列 。</li>
+<li>由于每条边恰好经过了两次，因此一共记录了<code>2n-1</code>个节点。</li>
+<li>用<code>e[1,…,2n-1]</code>来表示这个数组，<code>e[i]</code>表示第<code>i</code>时刻访问的节点编号，并用<code>Firsr[x]</code>来表示节点<code>x</code>第一次被访问的时间。</li>
+<li>那么对于任何<code>First[u]&lt;Firts[v]</code>的节点<code>u,v</code>来说，<code>DFS</code>中从第一次访问<code>u</code>到第一次访问<code>v</code>所经过的路径应该是<code>e[First[u],…,First[v]]</code>。</li>
+<li>虽然这些节点会包含<code>u</code>的后代，但是其中深度最小的节点一定是<code>u</code>和<code>v</code>的<code>LCA</code>。</li>
+<li><code>dep[i]</code>表示节点<code>i</code>的深度，那么当<code>First[u]&lt;=First[v]</code>时，<code>LCA(u,v)=RMQ(dep,First[u],First[v])</code>;</li>
+<li>同理，<code>First[u]&gt;First[v]</code>时，<code>LCA(u,v)=RMQ(dep,First[v],First[u])</code>;</li>
+</ul>
+</li>
+<li>
+<p>图示：</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072741813-1120396839.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+<ul>
+<li>
+<p>对上图，从节点<code>1</code>开始<code>DFS</code>，很容易得到如下图所示的三个数组：</p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072809691-705451799.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+<p><img src="./最近公共祖先(LCA)_files/1824884-20200502072833110-1205736083.png" alt="" loading="lazy" class="medium-zoom-image"></p>
+<ul>
+<li><code>E</code>数组记录图的欧拉序列，下标是时间戳，值是节点编号</li>
+<li><code>L</code>数组记录节点的深度序列，下标是时间戳，值是节点到根的深度</li>
+<li><code>H</code>数组记录节点的第一次访问时间，下标为节点，值为节点第一次访问时间。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>code</code></p>
+<pre class="highlighter-hljs" highlighted="true"><code class="language-c++ highlighter-hljs hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> maxn=<span class="hljs-number">1e4</span>+<span class="hljs-number">5</span>;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Edge</span>{</span>
+	<span class="hljs-type">int</span> to,next;
+}a[maxn*<span class="hljs-number">2</span>];
+<span class="hljs-type">int</span> n,e[maxn],f[maxn][<span class="hljs-number">21</span>],head[maxn],len;
+<span class="hljs-type">int</span> Time,dep[maxn],First[maxn],vis[maxn];
+<span class="hljs-type">void</span> <span class="hljs-title function_">Insert</span><span class="hljs-params">(<span class="hljs-type">int</span> x,<span class="hljs-type">int</span> y)</span>{
+	a[++len].to=y;a[len].next=head[x];head[x]=len;
+}
+<span class="hljs-type">void</span> <span class="hljs-title function_">Init</span><span class="hljs-params">()</span>{
+	<span class="hljs-type">int</span> N=<span class="hljs-number">2</span>*n<span class="hljs-number">-1</span>;<span class="hljs-comment">//n个点欧拉序列有2*n-1个时间戳 </span>
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=N;++i)<span class="hljs-comment">//枚举时间戳 </span>
+		f[i][<span class="hljs-number">0</span>]=i;<span class="hljs-comment">//i开始的长度为1的区间里深度最小的时间戳为i </span>
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">1</span>;(<span class="hljs-number">1</span>&lt;&lt;j)&lt;=N;++j)<span class="hljs-comment">//枚举区间宽度为2^j </span>
+		<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i+(<span class="hljs-number">1</span>&lt;&lt;j)<span class="hljs-number">-1</span>&lt;=N;++i){<span class="hljs-comment">//枚举区间起点，保证区间终点i+(1&lt;&lt;j)-1&lt;=n </span>
+			<span class="hljs-type">int</span> x=f[i][j<span class="hljs-number">-1</span>],y=f[i+(<span class="hljs-number">1</span>&lt;&lt;j<span class="hljs-number">-1</span>)][j<span class="hljs-number">-1</span>];
+			<span class="hljs-keyword">if</span>(dep[x]&lt;dep[y])f[i][j]=x;
+			<span class="hljs-keyword">else</span> f[i][j]=y;
+		}
+} 
+<span class="hljs-type">int</span> <span class="hljs-title function_">Ask</span><span class="hljs-params">(<span class="hljs-type">int</span> s,<span class="hljs-type">int</span> t)</span>{
+	<span class="hljs-type">int</span> k=<span class="hljs-built_in">log</span>(t-s+<span class="hljs-number">1</span>)/<span class="hljs-built_in">log</span>(<span class="hljs-number">2</span>);<span class="hljs-comment">//保证k满足 2^k&lt;r+l-1&lt;=2^(k+1)</span>
+	<span class="hljs-type">int</span> x=f[s][k],y=f[t-(<span class="hljs-number">1</span>&lt;&lt;k)+<span class="hljs-number">1</span>][k];
+	<span class="hljs-keyword">if</span>(dep[x]&lt;dep[y])<span class="hljs-keyword">return</span> x;
+	<span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> y;
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">lca</span><span class="hljs-params">(<span class="hljs-type">int</span> u,<span class="hljs-type">int</span> v)</span>{<span class="hljs-comment">//lca(u,v)在时间戳[First[u],First[v]]区间dep[]最小点</span>
+	<span class="hljs-type">int</span> x=First[u],y=First[v];
+	<span class="hljs-keyword">if</span>(x&gt;y)<span class="hljs-built_in">std</span>::swap(x,y);
+	<span class="hljs-keyword">return</span> e[Ask(x,y)];
+}
+<span class="hljs-type">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span> u,<span class="hljs-type">int</span> deep)</span>{<span class="hljs-comment">//预处理出节点深度，欧拉序列和节点第一次访问时间</span>
+	vis[u]=<span class="hljs-number">1</span>;e[++Time]=u;First[u]=Time;dep[Time]=deep;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=head[u];i;i=a[i].next){
+		<span class="hljs-type">int</span> v=a[i].to;
+		<span class="hljs-keyword">if</span>(!vis[v]){
+			dfs(v,deep+<span class="hljs-number">1</span>);
+			e[++Time]=u;dep[Time]=deep;
+		}
+	}
+} 
+<span class="hljs-type">void</span> <span class="hljs-title function_">Solve</span><span class="hljs-params">()</span>{
+	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;n);
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;n;++i){
+		<span class="hljs-type">int</span> x,y;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;x,&amp;y);
+		Insert(x,y);Insert(y,x);
+	}
+	dfs(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>);	
+	Init();
+	<span class="hljs-type">int</span> Q;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;Q);
+	<span class="hljs-keyword">while</span>(Q--){
+		<span class="hljs-type">int</span> x,y;<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>,&amp;x,&amp;y);
+		<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,lca(x,y));
+	}
+}
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>{
+	Solve();
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+</li>
+<li>
+<p>时间复杂度：预处理的时间复杂度为<code>O(n*log(n))</code> ，每次查询<code> LCA</code> 的时间复杂度为<code>O(1)</code> 。</p>
+</li>
+</ul>
+
+</div>
+
+<div class="clear"></div>
+
+            </div>
+            
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script>
+    var cb_entryId = 12815765, cb_entryCreatedDate = '2020-05-02 07:29', cb_postType = 1, cb_postTitle = '最近公共祖先';
+    var allowComments = true, cb_blogId = 549441, cb_blogApp = 'hbhszxyb', cb_blogUserGuid = '6de3e292-ec62-49f8-ba7a-08d74319cd87';
+    mermaidRender.render()
+    markdown_highlight()
+    zoomManager.apply("#cnblogs_post_body img:not(.code_img_closed):not(.code_img_opened)");    
+</script>
+<a id="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+
+
+	</div>
+	</div>
+	<div id="sideBar">
+		
+	</div>
+	<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+	
+</div>
+
+
+
+    
+
+    <input type="hidden" id="antiforgery_token" value="CfDJ8CE1tT_puDpHgc1zrpsLVP-UaaUbVxitL_N5IzmF51JkI78hhMrOQkeV7cF_MyDJXS_8ljwpGEBbmw7QGu5bndgVzJSdITbWtSXM8v9w1yoo0As91fdQOI9Wmm0e8xQoMeIBOv5NqZT0ran4gdS7NSQ">
+    <script async="" src="./最近公共祖先(LCA)_files/js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-M95P3TTWJZ');
+</script>
+<script defer="" src="./最近公共祖先(LCA)_files/hm.js.下载"></script>
+
+
+<div style="z-index: 998; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; flex-direction: column; align-items: center; justify-content: center">
+<div style="background: #fff;padding: 30px; margin: 30px; border-radius: 16px;">
+  <div style="width: 200px; height: 200px; background: rgba(255, 255, 255, 0.8); position: absolute; top: -100px; right: -100px; border-radius: 100px"></div>
+  <div style="text-align: center; font-size: 18px; margin-bottom: 10px;">点击右上角即可分享</div>
+  <img src="./最近公共祖先(LCA)_files/35695-20230906145857937-1471873834.gif" alt="微信分享提示">
+</div>   
+    </div><button class="charm-bar-item charm-bar-handle hidden" type="button" title="显示工具栏"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="logo">
+  <style>
+    .main {
+      fill: #FFF;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .main {
+        fill: #59E8EB;
+      }
+    }
+  </style>
+  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g transform="translate(-240.000000, -192.000000)">
+      <g id="VIP_3_line" transform="translate(240.000000, 192.000000)">
+        <path d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z" id="MingCute" fill-rule="nonzero"></path>
+        <path class="main" d="M2.33789,4.86283 C1.86918,4.02957 2.47132,3 3.42736,3 L9.70837,3 C10.2488,3 10.7475,3.29076 11.0138,3.7611 L12.9999,7.26995 L14.986,3.7611 C15.2523,3.29076 15.7509,3 16.2914,3 L20.5724,3 C21.5285,3 22.1306,4.02957 21.6619,4.86282 L13.0894,20.1029 C12.6115,20.9525 11.3883,20.9525 10.9104,20.1029 L2.33789,4.86283 Z M4.70974,5 L11.9999,17.9603 L19.29,5 L16.5829,5 L12.9999,11.3301 L9.41685,5 L4.70974,5 Z"></path>
+      </g>
+    </g>
+  </g>
+</svg> </button></body></html>

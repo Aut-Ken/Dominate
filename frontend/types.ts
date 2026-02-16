@@ -4,8 +4,11 @@ export enum View {
   PROJECTS = 'Projects',
   MY_TASKS = 'My Tasks',
   TEAM = 'Team',
+  CHAT = 'Chat',
   REPORTS = 'Reports',
   CALENDAR = 'Calendar',
+  WIKI = 'Wiki',
+  SPRINTS = 'Sprints',
   SETTINGS = 'Settings',
   PROFILE = 'Profile',
 }
@@ -34,7 +37,8 @@ export interface Task {
   tags?: string[];
   imageUrl?: string;
   commentsCount?: number;
-  type?: 'task' | 'mission'; // Mission is a personal calendar entry
+  type?: 'task' | 'mission';
+  sprintId?: string;
 }
 
 export interface TeamMember {
@@ -68,3 +72,75 @@ export interface Stat {
   icon: string;
   color: string;
 }
+
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  content: string;
+  msgType?: string;
+  fileName?: string;
+  channel: string;
+  createdAt: string;
+}
+
+export interface Comment {
+  id: string;
+  taskId: string;
+  authorId: string;
+  authorName: string;
+  authorAvatar: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface TimeLog {
+  id: string;
+  taskId: string;
+  userId: string;
+  userName: string;
+  hours: number;
+  note: string;
+  loggedAt: string;
+}
+
+export interface Sprint {
+  id: string;
+  projectId: string;
+  name: string;
+  goal: string;
+  startDate: string;
+  endDate: string;
+  status: 'Planning' | 'Active' | 'Completed';
+  createdAt: string;
+}
+
+export interface WikiPage {
+  id: string;
+  projectId: string;
+  title: string;
+  content: string;
+  authorId: string;
+  authorName: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface WebhookConfig {
+  id: string;
+  projectId: string;
+  name: string;
+  url: string;
+  events: string;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface BurndownPoint {
+  day: number;
+  date: string;
+  ideal: number;
+  actual: number;
+}
+

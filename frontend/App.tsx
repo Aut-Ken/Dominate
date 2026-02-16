@@ -10,6 +10,11 @@ import Settings from './components/Settings';
 import MyTasks from './components/MyTasks';
 import Reports from './components/Reports';
 import Profile from './components/Profile';
+import Chat from './components/Chat';
+import TaskDetailModal from './components/TaskDetailModal';
+import Wiki from './components/Wiki';
+import Sprints from './components/Sprints';
+import AIChatPanel from './components/AIChatPanel';
 import NewProjectModal from './components/NewProjectModal';
 import TaskModal from './components/TaskModal';
 import Login from './components/Login';
@@ -34,6 +39,8 @@ const App: React.FC = () => {
   const [calendarTargetDate, setCalendarTargetDate] = useState<string | null>(null);
   const [targetTaskStatus, setTargetTaskStatus] = useState<Task['status']>('To Do');
   const [targetProjectId, setTargetProjectId] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -48,9 +55,9 @@ const App: React.FC = () => {
         api.getTasks(),
         api.getTeamMembers()
       ]);
-      setProjects(projectsData);
-      setTasks(tasksData);
-      setAllTeamMembers(teamData);
+      setProjects(Array.isArray(projectsData) ? projectsData : []);
+      setTasks(Array.isArray(tasksData) ? tasksData : []);
+      setAllTeamMembers(Array.isArray(teamData) ? teamData : []);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -66,6 +73,11 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setToken(null);
     setUserId(null);
+    setProjects([]);
+    setTasks([]);
+    setAllTeamMembers([]);
+    setNotifications([]);
+    setCurrentView(View.DASHBOARD);
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
   };
@@ -124,6 +136,15 @@ const App: React.FC = () => {
     }
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      await api.deleteTask(taskId);
+      setTasks(prev => prev.filter(t => t.id !== taskId));
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+    }
+  };
+
   const handleUpdateMember = (updatedMember: TeamMember) => {
     setAllTeamMembers(prev => prev.map(m => m.id === updatedMember.id ? updatedMember : m));
   };
@@ -141,7 +162,6 @@ const App: React.FC = () => {
   };
 
   const handleNavigateToProfile = (member?: TeamMember) => {
-    // Fallback to finding "me" in the team list if no member provided
     const target = member || allTeamMembers.find(m => m.userId === userId);
     if (target) {
       setSelectedMemberId(target.id);
@@ -173,7 +193,7 @@ const App: React.FC = () => {
     id: 'guest',
     name: 'Guest',
     role: 'Guest',
-    avatar: 'https://picsum.photos/seed/guest/100/100',
+    avatar: '',
     status: 'Online',
     department: 'None',
     location: 'Remote',
@@ -197,19 +217,25 @@ const App: React.FC = () => {
       case View.DASHBOARD:
         return <Dashboard tasks={actualTasks} projects={projects} team={allTeamMembers} />;
       case View.PROJECTS:
-        return <Projects projects={projects} tasks={tasks} onOpenModal={(status, projId) => openTaskModal('task', status, projId)} onUpdateStatus={handleUpdateTaskStatus} onAddTask={(t) => setTasks([t, ...tasks])} currentUserId={userId} />;
+        return <Projects projects={projects} tasks={tasks} onOpenModal={(status, projId) => openTaskModal('task', status, projId)} onUpdateStatus={handleUpdateTaskStatus} onAddTask={(t) => setTasks([t, ...tasks])} currentUserId={userId} onTaskClick={(t) => { setSelectedTask(t); setIsTaskDetailOpen(true); }} onProjectsRefresh={fetchData} />;
       case View.MY_TASKS:
-        return <MyTasks tasks={actualTasks} onUpdateStatus={handleUpdateTaskStatus} currentUserId={userId} />;
+        return <MyTasks tasks={actualTasks} onUpdateStatus={handleUpdateTaskStatus} onDeleteTask={handleDeleteTask} currentUserId={userId} />;
       case View.TEAM:
         return <Team tasks={actualTasks} members={allTeamMembers} onNavigateToProfile={handleNavigateToProfile} onUpdateMember={handleUpdateMember} />;
       case View.REPORTS:
         return <Reports tasks={actualTasks} projects={projects} currentUserId={userId} />;
       case View.CALENDAR:
         return <Calendar tasks={tasks} onAddClick={(date) => openTaskModal('mission', 'To Do', date)} />;
+      case View.CHAT:
+        return <Chat currentUser={currentUser} currentUserId={userId} team={allTeamMembers} />;
       case View.PROFILE:
         return <Profile tasks={actualTasks} member={currentProfileMember} isMe={currentProfileMember.userId === userId} onUpdate={handleUpdateMember} />;
       case View.SETTINGS:
-        return <Settings toggleTheme={toggleTheme} darkMode={darkMode} />;
+        return <Settings toggleTheme={toggleTheme} darkMode={darkMode} onLogout={handleLogout} userId={userId} />;
+      case View.WIKI:
+        return <Wiki projects={projects} currentUserId={userId || ''} currentUserName={currentUser.name} />;
+      case View.SPRINTS:
+        return <Sprints projects={projects} tasks={tasks} currentUserId={userId || ''} />;
       default:
         return <Dashboard tasks={actualTasks} projects={projects} team={allTeamMembers} />;
     }
@@ -233,6 +259,9 @@ const App: React.FC = () => {
           onMarkRead={handleMarkNotificationRead}
           onNotificationClick={() => setCurrentView(View.MY_TASKS)}
           user={currentUser}
+          onLogout={handleLogout}
+          onNavigateToProfile={() => handleNavigateToProfile()}
+          onNavigateToSettings={() => setCurrentView(View.SETTINGS)}
         />
         <main className="flex-1 overflow-y-auto custom-scrollbar">
           {renderView()}
@@ -255,6 +284,26 @@ const App: React.FC = () => {
           onSave={handleAddTask}
         />
       )}
+
+      {isTaskDetailOpen && selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          isOpen={isTaskDetailOpen}
+          onClose={() => { setIsTaskDetailOpen(false); setSelectedTask(null); }}
+          currentUser={currentUser}
+          currentUserId={userId}
+          onUpdateTask={async (taskId, updates) => {
+            try {
+              await api.updateTask(taskId, updates);
+              setTasks(prev => prev.map(t => t.id === taskId ? { ...t, ...updates } : t));
+              setSelectedTask(prev => prev ? { ...prev, ...updates } : prev);
+            } catch (e) { console.error(e); }
+          }}
+        />
+      )}
+
+      {/* Global AI Chat Panel */}
+      {currentUser && <AIChatPanel projects={projects} currentUserName={currentUser.name} />}
     </div>
   );
 };

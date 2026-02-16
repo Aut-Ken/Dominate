@@ -20,6 +20,12 @@ func main() {
 		&models.TeamMember{},
 		&models.Project{},
 		&models.Task{},
+		&models.Message{},
+		&models.Comment{},
+		&models.TimeLog{},
+		&models.Sprint{},
+		&models.WikiPage{},
+		&models.Webhook{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)

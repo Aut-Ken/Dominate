@@ -60,7 +60,7 @@ const Reports: React.FC<ReportsProps> = ({ tasks, projects, currentUserId }) => 
   ];
 
   return (
-    <div className="p-10 max-w-7xl mx-auto space-y-12 pb-32">
+    <div className="p-10 max-w-7xl mx-auto space-y-12 pb-32 animate-in fade-in duration-500">
       <div className="flex flex-col gap-2">
         <h2 className="text-3xl font-black tracking-tight">Performance Analytics</h2>
         <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Comparative data for the whole squad and your individual metrics.</p>

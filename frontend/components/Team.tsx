@@ -9,6 +9,19 @@ interface TeamProps {
   onUpdateMember: (member: TeamMember) => void;
 }
 
+function MemberAvatar({ src, name, size = 'w-20 h-20' }: { src?: string; name: string; size?: string }) {
+  const [failed, setFailed] = useState(false);
+  const initial = (name || '?')[0]?.toUpperCase() || '?';
+  if (!src || failed) {
+    return (
+      <div className={`${size} rounded-[2rem] bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center text-white font-black text-2xl group-hover:scale-105 transition-transform`}>
+        {initial}
+      </div>
+    );
+  }
+  return <img src={src} className={`${size} rounded-[2rem] object-cover group-hover:scale-105 transition-transform`} alt={name} onError={() => setFailed(true)} />;
+}
+
 const Team: React.FC<TeamProps> = ({ tasks, members, onNavigateToProfile, onUpdateMember }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('All Squads');
@@ -33,7 +46,7 @@ const Team: React.FC<TeamProps> = ({ tasks, members, onNavigateToProfile, onUpda
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-12 pb-32">
+    <div className="p-8 max-w-7xl mx-auto space-y-12 pb-32 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between gap-8 items-center">
         <div className="relative w-full md:w-96">
           <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"><span className="material-icons-outlined">search</span></span>
@@ -64,11 +77,11 @@ const Team: React.FC<TeamProps> = ({ tasks, members, onNavigateToProfile, onUpda
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-        {filteredMembers.map(member => (
-          <div key={member.id} className="bg-white dark:bg-surface-dark p-8 rounded-[3rem] border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all group">
+        {filteredMembers.map((member, idx) => (
+          <div key={member.id} className="bg-white dark:bg-surface-dark p-8 rounded-[3rem] border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all group hover:-translate-y-1" style={{ animationDelay: `${idx * 60}ms` }}>
             <div className="flex justify-between items-start mb-6">
               <div className="relative">
-                <img src={member.avatar} className="w-20 h-20 rounded-[2rem] object-cover group-hover:scale-105 transition-transform" alt="a" />
+                <MemberAvatar src={member.avatar} name={member.name} />
                 <span className={`absolute -bottom-1 -right-1 w-6 h-6 border-4 border-white dark:border-surface-dark rounded-full ${member.status === 'Online' ? 'bg-green-500' : member.status === 'Away' ? 'bg-amber-500' : 'bg-slate-400'}`}></span>
               </div>
               <button onClick={() => setEditingMember(member)} className="text-slate-300 hover:text-primary p-2 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl transition-all">
@@ -101,7 +114,7 @@ const Team: React.FC<TeamProps> = ({ tasks, members, onNavigateToProfile, onUpda
 
       {editingMember && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-surface-dark w-full max-w-md rounded-3xl shadow-2xl p-8 border border-slate-200 dark:border-slate-800">
+          <div className="bg-white dark:bg-surface-dark w-full max-w-md rounded-3xl shadow-2xl p-8 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <h3 className="text-xl font-bold mb-6">Edit Team Member: {editingMember.name}</h3>
             <form onSubmit={handleSaveEdit} className="space-y-6">
               <div className="space-y-1">

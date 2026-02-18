@@ -26,6 +26,13 @@ func main() {
 		&models.Sprint{},
 		&models.WikiPage{},
 		&models.Webhook{},
+		&models.ActivityLog{},
+		&models.Attachment{},
+		&models.TaskTemplate{},
+		&models.Tag{},
+		&models.Notification{},
+		&models.TaskDependency{},
+		&models.ProjectRole{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)

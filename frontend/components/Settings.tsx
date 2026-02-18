@@ -88,6 +88,46 @@ const Settings: React.FC<SettingsProps> = ({ toggleTheme, darkMode, onLogout, us
                </div>
 
                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="col-span-2 p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl">
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Color Scheme</p>
+                     <div className="flex gap-3 flex-wrap">
+                        {[
+                           { name: 'ocean', color: '#2badee', label: 'Ocean' },
+                           { name: 'violet', color: '#8b5cf6', label: 'Violet' },
+                           { name: 'emerald', color: '#10b981', label: 'Emerald' },
+                           { name: 'rose', color: '#f43f5e', label: 'Rose' },
+                           { name: 'amber', color: '#f59e0b', label: 'Amber' },
+                           { name: 'slate', color: '#64748b', label: 'Slate' },
+                        ].map(theme => {
+                           const currentTheme = document.documentElement.getAttribute('data-theme') || 'ocean';
+                           const isActive = currentTheme === theme.name;
+                           return (
+                              <button
+                                 key={theme.name}
+                                 onClick={() => {
+                                    document.documentElement.setAttribute('data-theme', theme.name);
+                                    localStorage.setItem('dominate-theme', theme.name);
+                                 }}
+                                 className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${isActive ? 'border-slate-400 dark:border-slate-500 bg-white dark:bg-slate-800' : 'border-transparent hover:bg-white dark:hover:bg-slate-800'}`}
+                              >
+                                 <div className="w-8 h-8 rounded-full shadow-sm" style={{ backgroundColor: theme.color }} />
+                                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">{theme.label}</span>
+                              </button>
+                           );
+                        })}
+                     </div>
+                  </div>
+                  <div className="col-span-2 p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl">
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Export Data</p>
+                     <div className="flex gap-3">
+                        <a href="http://localhost:8080/api/export/csv" download className="flex items-center gap-2 px-5 py-3 bg-emerald-500/10 text-emerald-500 rounded-xl font-bold text-xs hover:bg-emerald-500/20 transition-colors">
+                           <span className="material-icons-outlined text-sm">table_chart</span> Export CSV
+                        </a>
+                        <a href="http://localhost:8080/api/export/json" download className="flex items-center gap-2 px-5 py-3 bg-blue-500/10 text-blue-500 rounded-xl font-bold text-xs hover:bg-blue-500/20 transition-colors">
+                           <span className="material-icons-outlined text-sm">data_object</span> Export JSON
+                        </a>
+                     </div>
+                  </div>
                   <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl">
                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Language</p>
                      <select value={language} onChange={e => setLanguage(e.target.value)}

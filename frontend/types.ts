@@ -9,6 +9,8 @@ export enum View {
   CALENDAR = 'Calendar',
   WIKI = 'Wiki',
   SPRINTS = 'Sprints',
+  GANTT = 'Gantt',
+  ACTIVITY = 'Activity',
   SETTINGS = 'Settings',
   PROFILE = 'Profile',
 }

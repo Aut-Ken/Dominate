@@ -9,6 +9,7 @@ import (
 
 	"dominate-backend/internal/config"
 	"dominate-backend/internal/models"
+	"dominate-backend/internal/ws"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -72,6 +73,9 @@ func SendMessage(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, message)
+
+	// Broadcast real-time
+	go ws.Broadcast(ws.EventChatMessage, message)
 }
 
 func UploadFile(c *gin.Context) {

@@ -18,6 +18,8 @@ import AIChatPanel from './components/AIChatPanel';
 import NewProjectModal from './components/NewProjectModal';
 import TaskModal from './components/TaskModal';
 import Login from './components/Login';
+import GanttChart from './components/GanttChart';
+import ActivityFeed from './components/ActivityFeed';
 import { api } from './services/api';
 
 const App: React.FC = () => {
@@ -236,6 +238,10 @@ const App: React.FC = () => {
         return <Wiki projects={projects} currentUserId={userId || ''} currentUserName={currentUser.name} />;
       case View.SPRINTS:
         return <Sprints projects={projects} tasks={tasks} currentUserId={userId || ''} />;
+      case View.GANTT:
+        return <GanttChart projects={projects} />;
+      case View.ACTIVITY:
+        return <ActivityFeed />;
       default:
         return <Dashboard tasks={actualTasks} projects={projects} team={allTeamMembers} />;
     }

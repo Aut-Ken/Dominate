@@ -296,4 +296,141 @@ export const api = {
         const response = await fetch(`${API_BASE_URL}/ai/status`);
         return response.json();
     },
+
+    // Activity Logs
+    getActivityLogs: async (projectId?: string): Promise<any[]> => {
+        const url = projectId ? `${API_BASE_URL}/activity?project_id=${projectId}` : `${API_BASE_URL}/activity`;
+        const response = await fetch(url);
+        return response.json();
+    },
+
+    // Attachments
+    uploadAttachment: async (file: File, projectId: string, taskId?: string, uploaderId?: string, uploaderName?: string): Promise<any> => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('projectId', projectId);
+        if (taskId) formData.append('taskId', taskId);
+        if (uploaderId) formData.append('uploaderId', uploaderId);
+        if (uploaderName) formData.append('uploaderName', uploaderName);
+        const response = await fetch(`${API_BASE_URL}/attachments`, { method: 'POST', body: formData });
+        return response.json();
+    },
+    getAttachments: async (projectId?: string, taskId?: string): Promise<any[]> => {
+        const params = new URLSearchParams();
+        if (projectId) params.set('project_id', projectId);
+        if (taskId) params.set('task_id', taskId);
+        const response = await fetch(`${API_BASE_URL}/attachments?${params}`);
+        return response.json();
+    },
+    deleteAttachment: async (id: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/attachments/${id}`, { method: 'DELETE' });
+    },
+
+    // Task Templates
+    getTaskTemplates: async (): Promise<any[]> => {
+        const response = await fetch(`${API_BASE_URL}/templates`);
+        return response.json();
+    },
+    createTaskTemplate: async (template: any): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/templates`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(template),
+        });
+        return response.json();
+    },
+    deleteTaskTemplate: async (id: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/templates/${id}`, { method: 'DELETE' });
+    },
+
+    // Tags
+    getTags: async (projectId?: string): Promise<any[]> => {
+        const url = projectId ? `${API_BASE_URL}/tags?project_id=${projectId}` : `${API_BASE_URL}/tags`;
+        const response = await fetch(url);
+        return response.json();
+    },
+    createTag: async (projectId: string, name: string, color: string): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/tags`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ projectId, name, color }),
+        });
+        return response.json();
+    },
+    updateTag: async (id: string, updates: any): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/tags/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates),
+        });
+        return response.json();
+    },
+    deleteTag: async (id: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/tags/${id}`, { method: 'DELETE' });
+    },
+
+    // Notifications
+    getNotifications: async (userId: string): Promise<any[]> => {
+        const response = await fetch(`${API_BASE_URL}/notifications?user_id=${userId}`);
+        return response.json();
+    },
+    markNotificationRead: async (id: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/notifications/${id}/read`, { method: 'PUT' });
+    },
+    markAllNotificationsRead: async (userId: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/notifications/read-all?user_id=${userId}`, { method: 'PUT' });
+    },
+    getUnreadCount: async (userId: string): Promise<{ count: number }> => {
+        const response = await fetch(`${API_BASE_URL}/notifications/unread-count?user_id=${userId}`);
+        return response.json();
+    },
+
+    // Task Dependencies
+    getTaskDependencies: async (taskId?: string, projectId?: string): Promise<any[]> => {
+        const params = new URLSearchParams();
+        if (taskId) params.set('task_id', taskId);
+        if (projectId) params.set('project_id', projectId);
+        const response = await fetch(`${API_BASE_URL}/dependencies?${params}`);
+        return response.json();
+    },
+    addTaskDependency: async (taskId: string, dependsOnId: string, type?: string): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/dependencies`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ taskId, dependsOnId, type }),
+        });
+        return response.json();
+    },
+    removeTaskDependency: async (id: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/dependencies/${id}`, { method: 'DELETE' });
+    },
+
+    // RBAC
+    getProjectRoles: async (projectId: string): Promise<any[]> => {
+        const response = await fetch(`${API_BASE_URL}/roles?project_id=${projectId}`);
+        return response.json();
+    },
+    setProjectRole: async (projectId: string, userId: string, role: string): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/roles`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ projectId, userId, role }),
+        });
+        return response.json();
+    },
+    deleteProjectRole: async (id: string): Promise<void> => {
+        await fetch(`${API_BASE_URL}/roles/${id}`, { method: 'DELETE' });
+    },
+
+    // Gantt
+    getGanttData: async (projectId: string): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/gantt?project_id=${projectId}`);
+        return response.json();
+    },
+
+    // Dashboard Stats
+    getDashboardStats: async (): Promise<any> => {
+        const response = await fetch(`${API_BASE_URL}/stats/dashboard`);
+        return response.json();
+    },
 };

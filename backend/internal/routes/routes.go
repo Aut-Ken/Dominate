@@ -2,6 +2,7 @@ package routes
 
 import (
 	"dominate-backend/internal/handlers"
+	"dominate-backend/internal/ws"
 
 	"github.com/gin-gonic/gin"
 )
@@ -83,7 +84,61 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/ai/chat", handlers.AIChat)
 		api.POST("/ai/key", handlers.SetAPIKey)
 		api.GET("/ai/status", handlers.GetAIStatus)
+
+		// Activity Logs
+		api.GET("/activity", handlers.GetActivityLogs)
+
+		// Attachments
+		api.POST("/attachments", handlers.UploadAttachment)
+		api.GET("/attachments", handlers.GetAttachments)
+		api.GET("/attachments/:id/download", handlers.DownloadAttachment)
+		api.DELETE("/attachments/:id", handlers.DeleteAttachment)
+
+		// Task Templates
+		api.GET("/templates", handlers.GetTaskTemplates)
+		api.POST("/templates", handlers.CreateTaskTemplate)
+		api.DELETE("/templates/:id", handlers.DeleteTaskTemplate)
+
+		// Tags
+		api.GET("/tags", handlers.GetTags)
+		api.POST("/tags", handlers.CreateTag)
+		api.PUT("/tags/:id", handlers.UpdateTag)
+		api.DELETE("/tags/:id", handlers.DeleteTag)
+
+		// Notifications
+		api.GET("/notifications", handlers.GetNotifications)
+		api.PUT("/notifications/:id/read", handlers.MarkNotificationRead)
+		api.PUT("/notifications/read-all", handlers.MarkAllNotificationsRead)
+		api.GET("/notifications/unread-count", handlers.GetUnreadCount)
+
+		// Task Dependencies
+		api.GET("/dependencies", handlers.GetTaskDependencies)
+		api.POST("/dependencies", handlers.AddTaskDependency)
+		api.DELETE("/dependencies/:id", handlers.RemoveTaskDependency)
+
+		// RBAC
+		api.GET("/roles", handlers.GetProjectRoles)
+		api.POST("/roles", handlers.SetProjectRole)
+		api.DELETE("/roles/:id", handlers.DeleteProjectRole)
+
+		// Gantt
+		api.GET("/gantt", handlers.GetGanttData)
+
+		// Dashboard Stats
+		api.GET("/stats/dashboard", handlers.GetDashboardStats)
+
+		// Data Export
+		api.GET("/export/csv", handlers.ExportTasksCSV)
+		api.GET("/export/json", handlers.ExportTasksJSON)
 	}
+
+	// WebSocket
+	r.GET("/ws", ws.HandleWebSocket)
+
+	// Online count
+	api.GET("/online", func(c *gin.Context) {
+		c.JSON(200, gin.H{"count": ws.GetOnlineCount()})
+	})
 
 	// Serve uploaded files
 	r.Static("/uploads", "./uploads")

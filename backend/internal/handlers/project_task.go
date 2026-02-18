@@ -6,6 +6,7 @@ import (
 
 	"dominate-backend/internal/config"
 	"dominate-backend/internal/models"
+	"dominate-backend/internal/ws"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -118,6 +119,9 @@ func CreateTask(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, task)
+
+	// Broadcast real-time
+	go ws.Broadcast(ws.EventTaskCreated, task)
 }
 
 func UpdateTask(c *gin.Context) {
@@ -135,6 +139,9 @@ func UpdateTask(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Task updated"})
+
+	// Broadcast real-time
+	go ws.Broadcast(ws.EventTaskUpdated, map[string]interface{}{"id": id, "updates": input})
 }
 
 func DeleteTask(c *gin.Context) {
@@ -146,4 +153,7 @@ func DeleteTask(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Task deleted"})
+
+	// Broadcast real-time
+	go ws.Broadcast(ws.EventTaskDeleted, map[string]string{"id": id})
 }

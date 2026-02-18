@@ -1,0 +1,90 @@
+/* ==================== Theme System ==================== */
+:root {
+  --theme-primary: #2badee;
+  --theme-primary-dark: #1a92cf;
+  --theme-bg-light: #f6f7f8;
+  --theme-bg-dark: #101c22;
+  --theme-surface-dark: #1a262d;
+  --theme-surface-dark-hover: #25333b;
+}
+
+/* Ocean Theme (default) */
+[data-theme="ocean"] {
+  --theme-primary: #2badee;
+  --theme-primary-dark: #1a92cf;
+  --theme-bg-dark: #101c22;
+  --theme-surface-dark: #1a262d;
+}
+
+/* Violet Theme */
+[data-theme="violet"] {
+  --theme-primary: #8b5cf6;
+  --theme-primary-dark: #7c3aed;
+  --theme-bg-dark: #1a1025;
+  --theme-surface-dark: #231536;
+}
+
+/* Emerald Theme */
+[data-theme="emerald"] {
+  --theme-primary: #10b981;
+  --theme-primary-dark: #059669;
+  --theme-bg-dark: #0a1f17;
+  --theme-surface-dark: #132d22;
+}
+
+/* Rose Theme */
+[data-theme="rose"] {
+  --theme-primary: #f43f5e;
+  --theme-primary-dark: #e11d48;
+  --theme-bg-dark: #1f0a10;
+  --theme-surface-dark: #2d1319;
+}
+
+/* Amber Theme */
+[data-theme="amber"] {
+  --theme-primary: #f59e0b;
+  --theme-primary-dark: #d97706;
+  --theme-bg-dark: #1a1508;
+  --theme-surface-dark: #2b220d;
+}
+
+/* Slate Theme (Minimal) */
+[data-theme="slate"] {
+  --theme-primary: #64748b;
+  --theme-primary-dark: #475569;
+  --theme-bg-dark: #0f1419;
+  --theme-surface-dark: #1e2530;
+}
+
+/* Apply CSS vars to Tailwind dynamic colors */
+.bg-primary { background-color: var(--theme-primary) !important; }
+.text-primary { color: var(--theme-primary) !important; }
+.border-primary { border-color: var(--theme-primary) !important; }
+.shadow-primary\/20 { --tw-shadow-color: color-mix(in srgb, var(--theme-primary) 20%, transparent); }
+.ring-primary { --tw-ring-color: var(--theme-primary) !important; }
+.dark .bg-background-dark { background-color: var(--theme-bg-dark) !important; }
+.dark .bg-surface-dark { background-color: var(--theme-surface-dark) !important; }
+.from-primary { --tw-gradient-from: var(--theme-primary) !important; }
+
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.fade-in {
+  animation-name: fade-in;
+}
+
+@keyframes slide-in-from-top-2 {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-from-top-2 {
+  animation-name: slide-in-from-top-2;
+}
